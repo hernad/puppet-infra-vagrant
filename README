@@ -1,0 +1,36 @@
+Prerequisites
+=======================
+
+1) Packer
+
+https://www.packer.io/downloads.html
+
+
+2) Pupppet, librarian-puppet
+
+   gem install puppet
+   gem install librarian-puppet
+
+
+Build vagrant/vbox images
+===========================
+
+   cd packer
+   ./build-vagrant.sh
+
+   =>  manifests/, modules/, builds/
+
+
+
+
+Notes
+===========================
+
+packer $ ls -l -h builds
+total 4163616
+-rw-------  1 hernad  staff   552M Feb 17 10:48 packer-centos-6.6-x86_64-disk1.vmdk
+-rw-------  1 hernad  staff    11K Feb 17 10:47 packer-centos-6.6-x86_64.ovf
+-rw-r--r--  1 hernad  staff   463M Feb 17 11:40 packer-foreman.box
+-rw-r--r--  1 hernad  staff   595M Feb 17 11:48 packer-puppetdb.box
+-rw-r--r--  1 hernad  staff   423M Feb 17 11:20 packer-puppetmaster.box
+...

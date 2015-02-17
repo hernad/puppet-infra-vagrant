@@ -1,11 +1,22 @@
 #!/bin/bash -e
 
+check_exe() {
+
+ if [ -z `which $1` ]; then
+     echo install, then put $1 execute in PATH !
+     exit 1
+ fi
+ 
+}
+
 echo -e "Building CentOS 6.6 box..."
 if [ ! -f builds/packer-centos-6.6-x86_64.ovf ]; then
+        check_exe packer  
 	packer build centos-6.6.json
 fi
 
 echo -e "Installing Puppet modules..."
+check_exe librarian-puppet
 librarian-puppet install > /dev/null
 
 echo -e "Building Puppetmaster box..."
