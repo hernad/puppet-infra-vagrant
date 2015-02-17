@@ -21,6 +21,13 @@ Build vagrant/vbox images
    =>  manifests/, modules/, builds/
 
 
+Add packer vagrant boxes 
+===============================
+
+   vagrant box add packer-puppetdb builds/packer-puppetdb.box  
+   vagrant box add packer-puppetmaster builds/packer-puppetmaster.box
+   vagrant box add packer-foreman builds/packer-foreman.box
+
 
 
 Notes
