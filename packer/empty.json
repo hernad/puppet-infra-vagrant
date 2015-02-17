@@ -1,0 +1,52 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-ovf",
+      "source_path": "builds/packer-centos-6.6-x86_64.ovf",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "600s",
+      "ssh_port": 22,
+      "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+    }
+  ],
+  "provisioners": [
+    {
+        "type": "file",
+        "source": "certs/empty.localdomain.crt",
+        "destination": "/tmp/empty.localdomain.crt"
+    },
+    {
+        "type": "file",
+        "source": "certs/empty.localdomain.key",
+        "destination": "/tmp/empty.localdomain.key"
+    },
+    {
+        "type": "file",
+        "source": "certs/ca.pem",
+        "destination": "/tmp/ca.pem"
+    },
+    {
+        "execute_command": "echo 'vagrant' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
+        "type": "shell",
+        "script": "scripts/empty.sh"
+    },
+    {
+      "type": "puppet-masterless",
+      "manifest_file": "manifests/empty.pp",
+      "module_paths": [
+        "modules"
+      ]
+    },
+    {
+        "type": "shell",
+        "script": "scripts/cleanup.sh"
+    }
+  ],
+  "post-processors": [
+    {
+      "output": "builds/packer-empty.box",
+      "type": "vagrant"
+    }
+  ]
+}

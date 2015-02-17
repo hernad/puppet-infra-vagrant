@@ -8,10 +8,10 @@ check_exe() {
  fi
  
 }
+check_exe packer  
 
 echo -e "Building CentOS 6.6 box..."
 if [ ! -f builds/packer-centos-6.6-x86_64.ovf ]; then
-        check_exe packer  
 	packer build centos-6.6.json
 fi
 
@@ -39,6 +39,12 @@ echo -e "Building PuppetDB box..."
 if [ ! -f builds/packer-puppetdb.box ]; then
 	packer build puppetdb.json
 fi
+
+echo -e "Building empty box..."
+if [ ! -f builds/packer-empty.box ]; then
+	packer build empty.json
+fi
+
 
 echo -e "Cleaning up certificates..."
 rm -f foreman.localdomain.* puppetdb.localdomain.* ca.pem

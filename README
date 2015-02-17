@@ -29,6 +29,73 @@ Add packer vagrant boxes
    vagrant box add packer-foreman builds/packer-foreman.box
 
 
+Run 
+=========
+
+  
+  Add to vagrant host /etc/hosts:
+  
+  192.168.33.50   puppetmaster.localdomain
+  192.168.33.51   foreman.localdomain
+  192.168.33.55   puppetdb.localdomain
+
+
+  $ vagrant up
+
+  cat packer/modules/infra/files/foreman.answers.vagrant | grep admin_password
+  =>
+  admin_password: changeme
+
+  open http://localhost:8080
+
+  => admin/changeme
+
+
+  Create new smart-proxy:
+
+  https://puppetmaster.localdomain:8443
+
+
+foreman
+=========================
+
+[root@foreman ~]# puppet agent --test --server puppetmaster.localdomain
+
+[root@foreman ~]# foreman-installer --noop --dont-save-answers --verbose --enable-foreman-proxy --puppet-puppetmaster=puppetmaster.localdomain --foreman-admin-username=admin --foreman-admin-password=changeme --puppet-server=false --foreman-proxy-puppetrun=false  --foreman-proxy-puppetca=false --foreman-proxy-register-in-foreman=false
+
+
+Puppetmaster
+=========================
+
+[vagrant@puppetmaster ~]$ sudo puppet module install -i /etc/puppet/environments/production/modules saz/ntp
+
+[vagrant@puppetmaster ~]$ sudo puppet module install puppetlabs-mysql
+[vagrant@puppetmaster ~]$ sudo puppet module install puppetlabs-postgresql
+
+
+[vagrant@puppetmaster ~]$ sudo puppet module list
+/etc/puppet/modules
+├── nanliu-staging (v1.0.3)
+├── puppetlabs-apache (v1.2.0)
+├── puppetlabs-concat (v1.1.2)
+├── puppetlabs-mysql (v3.2.0)
+└── puppetlabs-stdlib (v4.5.1)
+/usr/share/puppet/modules (no modules installed)
+
+
+
+empty.localdomain
+=========================
+
+[vagrant@puppetmaster ~]$ sudo puppet cert generate empty.localdomain
+Notice: empty.localdomain has a waiting certificate request
+Notice: Signed certificate request for empty.localdomain
+Notice: Removing file Puppet::SSL::CertificateRequest empty.localdomain at '/var/lib/puppet/ssl/ca/requests/empty.localdomain.pem'
+Notice: Removing file Puppet::SSL::CertificateRequest empty.localdomain at '/var/lib/puppet/ssl/certificate_requests/empty.localdomain.pem'
+
+[vagrant@puppetmaster ~]$  sudo cp /var/lib/puppet/ssl/certs/empty.localdomain.pem /vagrant/packer/certs/empty.localdomain.crt
+[vagrant@puppetmaster ~]$  sudo cp /var/lib/puppet/ssl/private_keys/empty.localdomain.pem /vagrant/packer/certs/empty.localdomain.key
+
 
 Notes
 ===========================
@@ -41,3 +108,11 @@ total 4163616
 -rw-r--r--  1 hernad  staff   595M Feb 17 11:48 packer-puppetdb.box
 -rw-r--r--  1 hernad  staff   423M Feb 17 11:20 packer-puppetmaster.box
 ...
+
+Ernads-iMac:puppet-infra-vagrant hernad$ vagrant status 
+Current machine states:
+
+puppetmaster              running (virtualbox)
+foreman                   running (virtualbox)
+puppetdb                  running (virtualbox)
+
