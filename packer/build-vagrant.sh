@@ -10,6 +10,12 @@ check_exe() {
 }
 check_exe packer  
 
+echo -e "Building Fedora 21 box..."
+if [ ! -f builds-fedora/packer-fedora-21-x86_64.ovf ]; then
+	packer build fedora-21.json
+fi
+
+
 echo -e "Building CentOS 6.6 box..."
 if [ ! -f builds/packer-centos-6.6-x86_64.ovf ]; then
 	packer build centos-6.6.json
@@ -45,6 +51,10 @@ if [ ! -f builds/packer-empty.box ]; then
 	packer build empty.json
 fi
 
+echo -e "Building fedora21 box..."
+if [ ! -f builds/packer-fedora21.box ]; then
+	packer build fedora-21-box.json
+fi
 
 echo -e "Cleaning up certificates..."
 rm -f foreman.localdomain.* puppetdb.localdomain.* ca.pem
