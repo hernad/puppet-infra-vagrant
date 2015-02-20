@@ -10,6 +10,12 @@ check_exe() {
 }
 check_exe packer  
 
+echo -e "Building Centos-7 vbox ..."
+if [ ! -f builds-fedora/packer-centos-7-x86_64.ovf ]; then
+	packer build centos-7.json
+fi
+
+
 echo -e "Building Fedora 21 box..."
 if [ ! -f builds-fedora/packer-fedora-21-x86_64.ovf ]; then
 	packer build fedora-21.json
