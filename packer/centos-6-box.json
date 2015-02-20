@@ -2,7 +2,7 @@
   "builders": [
     {
       "type": "virtualbox-ovf",
-      "source_path": "builds/packer-centos-6.6-x86_64.ovf",
+      "source_path": "builds-centos6/packer-centos-6.6-x86_64.ovf",
       "ssh_username": "vagrant",
       "ssh_password": "vagrant",
       "ssh_wait_timeout": "600s",
@@ -45,7 +45,7 @@
   ],
   "post-processors": [
     {
-      "output": "builds/packer-empty.box",
+      "output": "builds/packer-centos-6-box.box",
       "type": "vagrant"
     }
   ]

@@ -11,7 +11,7 @@ check_exe() {
 check_exe packer  
 
 echo -e "Building Centos-7 vbox ..."
-if [ ! -f builds-fedora/packer-centos-7-x86_64.ovf ]; then
+if [ ! -f builds-centos7/packer-centos-7-x86_64.ovf ]; then
 	packer build centos-7.json
 fi
 
@@ -23,7 +23,7 @@ fi
 
 
 echo -e "Building CentOS 6.6 box..."
-if [ ! -f builds/packer-centos-6.6-x86_64.ovf ]; then
+if [ ! -f builds-centos6/packer-centos-6.6-x86_64.ovf ]; then
 	packer build centos-6.6.json
 fi
 
@@ -31,8 +31,10 @@ echo -e "Installing Puppet modules..."
 check_exe librarian-puppet
 librarian-puppet install > /dev/null
 
-echo -e "Building Puppetmaster box..."
-if [ ! -f builds/packer-puppetmaster.box ]; then
+
+puppetmaster() {
+ echo -e "Building Puppetmaster box..."
+ if [ ! -f builds/packer-puppetmaster.box ]; then
 	packer build puppetmaster.json
 	vagrant init --force builds/packer-puppetmaster.box
 	vagrant up
@@ -40,21 +42,28 @@ if [ ! -f builds/packer-puppetmaster.box ]; then
 	vagrant destroy --force
 	vagrant box remove --force builds/packer-puppetmaster.box
 	rm -f Vagrantfile
+ fi
+}
+
+#echo -e "Building Foreman box..."
+#if [ ! -f builds/packer-foreman.box ]; then
+#	packer build foreman.json
+#fi
+
+#echo -e "Building PuppetDB box..."
+#if [ ! -f builds/packer-puppetdb.box ]; then
+#	packer build puppetdb.json
+#fi
+
+echo -e "Building centos-7 box..."
+if [ ! -f builds/packer-centos-7-box.box ]; then
+	packer build centos-7-box.json
 fi
 
-echo -e "Building Foreman box..."
-if [ ! -f builds/packer-foreman.box ]; then
-	packer build foreman.json
-fi
 
-echo -e "Building PuppetDB box..."
-if [ ! -f builds/packer-puppetdb.box ]; then
-	packer build puppetdb.json
-fi
-
-echo -e "Building empty box..."
-if [ ! -f builds/packer-empty.box ]; then
-	packer build empty.json
+echo -e "Building centos-6 box..."
+if [ ! -f builds/packer-centos-6-box.box ]; then
+	packer build centos-6-box.json
 fi
 
 echo -e "Building fedora21 box..."
